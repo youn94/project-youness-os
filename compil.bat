@@ -38,6 +38,14 @@ i686-elf-gcc -m32 -ffreestanding -fno-pie -fno-stack-protector -mgeneral-regs-on
 if errorlevel 1 goto error
 
 echo ===========================
+echo Compilation du pilote pc2
+echo ===========================
+
+i686-elf-gcc -m32 -ffreestanding -fno-pie -fno-stack-protector -mgeneral-regs-only -Ikernel/ps2 -c kernel/ps2/ps2.c -o ps2.o
+if errorlevel 1 goto error
+
+
+echo ===========================
 echo Compilation du kernel C
 echo ===========================
 
@@ -48,7 +56,7 @@ echo ===========================
 echo Link du kernel
 echo ===========================
 
-i686-elf-gcc -m32 -T linker.ld -ffreestanding -nostdlib -no-pie entry.o kernel.o video.o inout.o pci.o -lgcc -o kernel.elf
+i686-elf-gcc -m32 -T linker.ld -ffreestanding -nostdlib -no-pie entry.o kernel.o video.o inout.o pci.o ps2.o -lgcc -o kernel.elf
 if errorlevel 1 goto error
 
 echo ===========================
@@ -106,7 +114,7 @@ echo ===========================
 copy /b boot.bin+kernel.bin os.bin >nul
 
 qemu-system-i386 -boot a -fda os.bin ^
-  -device qemu-xhci,id=xhci,bus=pci.0,addr=05.0 ^
+  -device qemu-xhci,id=xhci,bus=pci.0,addr=05.0 
   -device usb-kbd,bus=xhci.0
 echo.
 echo ===== Build termine =====

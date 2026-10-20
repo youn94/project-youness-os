@@ -10,8 +10,20 @@
 
 
 struct repons;
-int pci(unsigned short bus,unsigned short device,unsigned short function,unsigned short registre);
+int pci_r(unsigned short bus,unsigned short device,unsigned short function,unsigned short registre);
 
-void pci_scan();
+void pci_w(unsigned short bus,unsigned short device,unsigned short function,unsigned short registre,uint32_t dat);
+
+void pci_scanusb();
+void usb_init();
+
+
+void scan_usb_port();
+
+struct entryerst;
+
+struct trb;
+
+
 
 #endif
